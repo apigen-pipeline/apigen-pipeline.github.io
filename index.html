@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>APIGen: Automated Pipeline for Generating Verifiable and Diverse Function-Calling Datasets</title>
+
+    <meta name="description" content="APIGen">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+     <!--FACEBOOK-->
+     <meta property="og:image" content="./img/share_image.png">
+     <meta property="og:image:type" content="image/png">
+     <meta property="og:image:width" content="1196">
+     <meta property="og:image:height" content="705">
+     <meta property="og:type" content="website" />
+     <meta property="og:url" content="https://apigen-pipeline.github.io/"/>
+     <meta property="og:title" content="APIGen Pipeline" />
+     <meta property="og:description"
+         content="Project page for APIGen Pipeline." />
+ 
+     <!--TWITTER-->
+     <meta name="twitter:card" content="summary_large_image" />
+     <meta name="twitter:title" content="APIGen Pipeline" />
+     <meta name="twitter:description"
+         content="Project page for APIGen Pipeline" />
+     <meta name="twitter:image" content="./img/share_image.png" />
+
+     
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+    <link rel="stylesheet" href="css/app.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+    
+    <script src="js/app.js"></script>
+	
+    <style>
+        .nav-pills {
+          position: relative;
+          display: inline;
+        }
+        .imtip {
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+    </style>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5JBS73F70V"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5JBS73F70V');
+</script>
+<body>
+    <div class="container" id="main">
+        <div class="row mt-4">
+            <h2 class="col-md-12 text-center">
+                <b><font size="+6">Video Language Planning</font></b></br> 
+            </h2>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <ul class="list-inline">
+                <br>
+                <li><a href="https://yilundu.github.io/">Yilun Du</a></li>
+                <li><a href="https://sherryy.github.io/">Sherry Yang</a></li>
+                <li><a href="https://www.peteflorence.com/">Pete Florence</a></li>
+                <li><a href="https://fxia22.github.io/">Fei Xia</a></li>
+                <li><a href="https://ayzaan.com/">Ayzaan Wahid</a></li>
+                <li><a href="https://brianichter.com/">Brian Ichter</a></li>
+                <li><a href="https://sermanet.github.io/">Pierre Sermanet</a></li>
+                <li><a href="https://cs.stanford.edu/~tianheyu/">Tianhe Yu</a></li> <br>
+                <li><a href="http://people.eecs.berkeley.edu/~pabbeel/">Pieter Abbeel</a></li>
+                <li><a href="http://cocosci.mit.edu/josh">Joshua B. Tenenbaum</a></li>
+                <li><a href="https://people.csail.mit.edu/lpk/">Leslie Kaelbling</a></li>
+                <li><a href="https://andyzeng.github.io/">Andy Zeng</a></li>
+                <li><a href="https://jonathantompson.github.io/">Jonathan Tompson</a></li>
+                <br>
+                <br>
+                    <a href="https://www.deepmind.com/">
+                        <image src="img/dm_logo.png" height="40px"> 
+                        Google DeepMind &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </a>
+                    <a href="https://www.mit.edu/">
+                        <image src="img/mit.png" height="25px"> 
+                        MIT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </a>
+                    <a href="https://www.berkeley.edu/">
+                        <image src="img/berkeley.png" height="40px"> 
+                        UC Berkeley
+                    </a>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row justify-content-md-center">
+            <div class="col-md-2 text-center">
+                <a href="https://arxiv.org/abs/2310.10625">
+                <image src="img/paper_small.png" height="60px">
+                <h4><strong>Paper</strong></h4>
+                </a>
+            </div>
+            <div class="col-md-2 text-center">
+                <a href="https://github.com/video-language-planning/vlp_code">
+                <image src="img/github.png" height="60px">
+                <h4><strong>Code</strong></h4>
+                </a>
+            </div>
+            <div class="col-md-2 text-center">
+                <a href="">
+                <image src="img/data.png" height="60px">
+                <h4><strong>Data</strong></h4>
+                </a>
+            </div>
+            <div class="col-md-2 text-center">
+                <a href="#results">
+                <image src="img/results.png" height="60px">
+                <h4><strong>Results</strong></h4>
+                </a>
+            </div>
+        </div>
+
+        <div class="row justify-content-md-center">
+            <div class="col-md-10 col-lg-8">
+                <video id="v0" width="100%" preload="metadata" playsinline muted onclick="setAttribute('controls', 'true');" loop autoplay>
+                    <source src="videos/vlp_teaser_comp.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+        <div class="row justify-content-md-center">
+            <div class="col-md-10 col-lg-8">
+                <h3 class="mt-4 mb-2">
+                    Abstract
+                </h3>
+                <p class="text-justify">
+                We are interested in enabling visual planning for complex long-horizon tasks in
+the space of generated videos and language, leveraging recent advances in large
+generative models pretrained on Internet-scale data. To this end, we present video
+language planning (VLP), an algorithm that consists of a tree search procedure,
+where we train (i) vision-language models to serve as both policies and value
+functions, and (ii) text-to-video models as dynamics models. VLP takes as input a
+long-horizon task instruction and current image observation, and outputs a long
+video plan that provides detailed multimodal (video and language) specifications
+that describe how to complete the final task. VLP scales with increasing computation budget where more computation time results in improved video plans, and
+is able to synthesize long-horizon video plans across different robotics domains –
+from multi-object rearrangement, to multi-camera bi-arm dexterous manipulation.
+Generated video plans can be translated into real robot actions via goal-conditioned
+policies, conditioned on each intermediate frame of the generated video. Experiments show that VLP substantially improves long-horizon task success rates
+compared to prior methods on both simulated and real robots (across 3 hardware
+platforms).
+                </p>
+                <p style="text-align:center;">
+                    <image src="img/share_image.png" width="100%">
+                </p>
+            </div>
+        </div>
+
+
+        <div class="row justify-content-md-center mt-4">
+            <div class="col-md-10 col-lg-8">
+                <h3 id="results">Results</h3>
+                <p>Below we share additional qualitative results of Video Language Planning.
+                </p>
+
+
+                <p><a type="button" href="#genvideo" class="btn btn-primary">Generated Video and Language Plans</a></p>
+                <p> <a type="button" href="#vlm" class="btn btn-secondary">Effect of Using Planning with VLMs and Video Models</a></p>
+                <p> <a type="button" href="#real" class="btn btn-success">Real Executions</a></p>
+                <p><a type="button" href="#generalization" class="btn btn-info">Generalization</a></p>
+                <p><a type="button" href="#limitations" class="btn btn-warning">Limitations</a></p>
+            </div>
+        </div>
+        <div class="row justify-content-md-center mt-4">
+            <div class="col-md-10 col-lg-8">
+                <h3 id="genvideo">Generated Video and Language Plans</h3>
+                <p>Below are generated long-horizon language and video plans. Note that VLP is only given the first image and a single long-horizon language goal. All language subgoals and remaining frames in the video are <b>generated.</b></p>
+
+                <!--- Start of a block -->
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Make a Line</h5>
+                    <div class="card-body">
+                        <p>Generated Language Plan (Click to view relevant part of video plan!):</p>
+                        <select class="form-select" size="5" aria-label="size 5 select example">
+                            <option value="linereal_1">
+                                1) Move the red circle to the left of the yellow hexagon
+                            </option>
+                            <option value="linereal_2">
+                                2) Move the green circle closer to the red star
+                            </option>
+                            <option value="linereal_3">
+                                3) Move the blue triangle to the top left of the red circle
+                            </option>
+                            <option value="linereal_4">
+                                4) Move the blue cube to the left of the blue triangle
+                            </option>
+                            <option value="linereal_5">
+                                5) Move the green circle to the center
+                            </option>
+                            <option value="linereal_6">
+                                6) Push the green circle towards the yellow heart
+                            </option>
+                            <option value="linereal_7">
+                                7) Move the blue triangle to the right of the green circle
+                            </option>
+                            <option value="linereal_8">
+                                8) Slide the blue cube towards the blue triangle
+                            </option>
+                            <option value="linereal_9">
+                                9) Push the red circle closer to the blue cube
+                            </option>
+                            <option value="linereal_10">
+                                10) Move the yellow hexagon closer to the red circle
+                            </option>
+                        </select>
+                        <br>
+                        <p>Generated Video Plan:</p>
+
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                                <video id="vid_linereal" width="100%" preload="metadata" playsinline controls>
+                                    <source src="videos/linereal.mp4" type="video/mp4">
+                                </video>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <p>
+                                Both language and video plans are generated and stitched together through tree search.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!--- End of a block --->
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Make a Line</h5>
+                    <div class="card-body">
+                        <p>Generated Language Plan (Click to view relevant part of video plan!):</p>
+                        <select class="form-select" size="5" aria-label="size 5 select example">
+                            <option value="linesim_1">
+                                1) Move your arm to the bottom of the green cube
+                            </option>
+                            <option value="linesim_2">
+                                2) Move the green cube to the center of the board
+                            </option>
+                            <option value="linesim_3">
+                                3) Move the yellow star to the right of the red pentagon
+                            </option>
+                            <option value="linesim_4">
+                                4) Push the blue cube into the green cube
+                            </option>
+                            <option value="linesim_5">
+                                5) Push the blue cube to the right of the yellow star
+                            </option>
+                            <option value="linesim_6">
+                                6) Push the green cube to the right of the yellow star
+                            </option>
+                            <option value="linesim_7">
+                                7) Move your arm to the bottom of the red crescent
+                            </option>
+                            <option value="linesim_8">
+                                8) Move the red moon to the center
+                            </option>
+                            <option value="linesim_9">
+                                9) Move the red crescent slightly upwards
+                            </option>
+                            <option value="linesim_10">
+                                10) Move the red crescent slightly upwards
+                            </option>
+                            <option value="linesim_11">
+                                11) Move red moon slightly up
+                            </option>
+                            <option value="linesim_12">
+                                12) Move your arm to the left of the blue cube
+                            </option>
+                            <option value="linesim_13">
+                                13) Move your arm to the top of the red crescent
+                            </option>
+                            <option value="linesim_14">
+                                14) Move your arm to the top of the red crescent
+                            </option>
+                            <option value="linesim_15">
+                                15) Move your arm to the right of the blue crescent
+                            </option>
+                            <option value="linesim_16">
+                                16) Move the blue crescent into the green star
+                            </option>
+                        </select>
+                        <br>
+                        <p>Generated Video Plan:</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                                <video id="vid_linesim" width="100%" preload="metadata" playsinline controls>
+                                    <source src="videos/linesim.mp4" type="video/mp4">
+                                </video>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <p>
+                                Both language and video plans are generated and stitched together through tree search.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Group Blocks by Color</h5>
+                    <div class="card-body">
+                        <p>Generated Language Plan (Click to view relevant part of video plan!):</p>
+                        <select class="form-select" size="5" aria-label="size 5 select example">
+                            <option value="pairreal_1">
+                                1) Push the blue cube towards the center
+                            </option>
+                            <option value="pairreal_2">
+                                2) Push the blue triangle into the blue cube
+                            </option>
+                            <option value="pairreal_3">
+                                3) Push the green star towards the green circle
+                            </option>
+                            <option value="pairreal_4">
+                                4) Push the green star into the green circle
+                            </option>
+                            <option value="pairreal_5">
+                                5) Push the red circle into the red star
+                            </option>
+                            <option value="pairreal_6">
+                                6) Push the yellow hexagon into the yellow heart
+                            </option>
+                            <option value="pairreal_7">
+                                7) Push the yellow hexagon into the yellow heart
+                            </option>
+                            <option value="pairreal_8">
+                                8) Slide the yellow hexagon along with the yellow heart towards the top right
+                            </option>
+                        </select>
+                        <br>
+                        <p>Generated Video Plan:</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                            <video id="vid_pairreal" width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/pairreal.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+
+                        <div class="row">
+                            <p>
+                                Both language and video plans are generated and stitched together through tree search.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Group Blocks by Color</h5>
+                    <div class="card-body">
+                        <p>Generated Language Plan (Click to view relevant part of video plan!):</p>
+                        <select class="form-select" size="5" aria-label="size 5 select example">
+                            <option value="pairsim_1">
+                                1) Move the green cube into the red crescent
+                            </option>
+                            <option value="pairsim_2">
+                                2) Move your arm towards the blue cube
+                            </option>
+                            <option value="pairsim_3">
+                                3) Slide the blue cube into the blue moon
+                            </option>
+                            <option value="pairsim_4">
+                                4) Move your arm to the bottom right
+                            </option>
+                            <option value="pairsim_5">
+                                5) Push the yellow star into the yellow pentagon
+                            </option>
+                            <option value="pairsim_6">
+                                6) Move the green star slightly to the left
+                            </option>
+                            <option value="pairsim_7">
+                                7) Separate the green blocks from the red blocks
+                            </option>
+                            <option value="pairsim_8">
+                                8) Push the red pentagon into the red crescent
+                            </option>
+                        </select>
+                        <br>
+                        <p>Generated Video Plan:</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                            <video id="vid_pairsim" width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/pairsim.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+
+                        <div class="row">
+                            <p>
+                                Both language and video plans are generated and stitched together through tree search.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Move Blocks to the Bottom Right Corner</h5>
+                    <div class="card-body">
+                        <p>Generated Language Plan (Click to view relevant part of video plan!):</p>
+                        <select class="form-select" size="5" aria-label="size 5 select example">
+                            <option value="areareal_1">
+                                1) Move the red circle to the left of the yellow hexagon
+                            </option>
+                            <option value="areareal_2">
+                                2) Move the green circle closer to the red circle
+                            </option>
+                            <option value="areareal_3">
+                                3) Point your arm at the green star
+                            </option>
+                            <option value="areareal_4">
+                                4) Move the green star towards the center
+                            </option>
+                            <option value="areareal_5">
+                                5) Push the green star towards the red star
+                            </option>
+                            <option value="areareal_6">
+                                6) Push the green circle towards the green star
+                            </option>
+                            <option value="areareal_7">
+                                7) Move the blue cube closer to the green circle
+                            </option>
+                            <option value="areareal_8">
+                                8) Slide the blue triangle to the green star
+                            </option>
+                            <option value="areareal_9">
+                                9) Push the blue cube into the green circle
+                            </option>
+                            <option value="areareal_10">
+                                10) Move your arm towards the red circle
+                            </option>
+                            <option value="areareal_11">
+                                11) Move red circle closer to the blue triangle
+                            </option>
+                            <option value="areareal_12">
+                                12) Push the red circle into the blue cube
+                            </option>
+                        </select>
+                        <br>
+                        <p>Generated Video Plan:</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                            <video id="vid_areareal" width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/areareal.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+
+                        <div class="row">
+                            <p>
+                                Both language and video plans are generated and stitched together through tree search.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Move Blocks to the Top Right Corner</h5>
+                    <div class="card-body">
+                        <p>Generated Language Plan (Click to view relevant part of video plan!):</p>
+                        <select class="form-select" size="5" aria-label="size 5 select example">
+                            <option value="areasim_1">
+                                1) Place your arm to the left of blue moon
+                            </option>
+                            <option value="areasim_2">
+                                2) Push the blue moon into green cube
+                            </option>
+                            <option value="areasim_3">
+                                3) Move the blue crescent into the green cube
+                            </option>
+                            <option value="areasim_4">
+                                4) Push blue crescent and green cube slightly upwards
+                            </option>
+                            <option value="areasim_5">
+                                5) Push the blue crescent and yellow star into the blue cube
+                            </option>
+                            <option value="areasim_6">
+                                6) Push the yellow star and blue cube to the top right corner
+                            </option>
+                            <option value="areasim_7">
+                                7) Push the blue crescent with the help of the blue cube towards the top right corner of the board
+                            </option>
+                            <option value="areasim_8">
+                                8) Push the yellow pentagon towards the top right of the board
+                            </option>
+                            <option value="areasim_9">
+                                9) Push the yellow pentagon into the yellow star
+                            </option>
+                            <option value="areasim_10">
+                                10) Move the arm towards the red pentagon
+                            </option>
+                            <option value="areasim_11">
+                                11) Move the red pentagon to the top of the green star
+                            </option>
+                            <option value="areasim_12">
+                                12) Push the red pentagon into the yellow pentagon
+                            </option>
+                            <option value="areasim_13">
+                                13) Push the green blocks into the group of blocks
+                            </option>
+                            <option value="areasim_14">
+                                14) Push the green star into the green cube
+                            </option>
+                        </select>
+                        <br>
+                        <p>Generated Video Plan:</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                            <video id="vid_areasim" width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/areasim.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+
+                        <div class="row">
+                            <p>
+                                Both language and video plans are generated and stitched together through tree search.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Put the Fruits into the Top Drawer</h5>
+                    <div class="card-body">
+                        <p>Generated Language Plan (Click to view relevant part of video plan!):</p>
+                        <select class="form-select" size="5" aria-label="size 5 select example">
+                            <option value="fractal_1">
+                                1) Open top drawer
+                            </option>
+                            <option value="fractal_2">
+                                2) Place banana in top drawer
+                            </option>
+                            <option value="fractal_3">
+                                3) Place apple in top drawer
+                            </option>
+                            <option value="fractal_4">
+                                4) Close top drawer
+                            </option>
+                        </select>
+                        <br>
+                        <p>Generated Video Plan:</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                            <video id="vid_fractal" width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/fractal.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+
+                        <div class="row">
+                            <p>
+                                Both language and video plans are generated and stitched together through tree search.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Stack Utensils, Cups, Bowls on Top of Each Other at the Center of the Table</h5>
+                    <div class="card-body">
+                        <p>Generated Language Plan (Click to view relevant part of video plan!):</p>
+                        <select class="form-select" size="5" aria-label="size 5 select example">
+                            <option value="aloha_1">
+                                1) Pick the pink bowl
+                            </option>
+                            <option value="aloha_2">
+                                2) Stack the pink bowl on top of the blue bowl
+                            </option>
+                            <option value="aloha_3">
+                                3) Pick up the orange cup
+                            </option>
+                            <option value="aloha_4">
+                                4) Pick the blue cup
+                            </option>
+                            <option value="aloha_5">
+                                5) Stack the purple cup on the top of the orange cup
+                            </option>
+                            <option value="aloha_6">
+                                6) Pick the green cup
+                            </option>
+                            <option value="aloha_7">
+                                7) Stack the green cup on top of the blue cup
+                            </option>
+                            <option value="aloha_8">
+                                8) Pick the fork
+                            </option>
+                            <option value="aloha_9">
+                                9) Place the spoon in the cup
+                            </option>
+                            <option value="aloha_10">
+                                10) Pick the spoon
+                            </option>
+                            <option value="aloha_11">
+                                11) Place the spoon in the cup
+                            </option>
+                            <option value="aloha_12">
+                                12) Push the bowl to the center
+                            </option>
+                            <option value="aloha_13">
+                                13) Move the bowl to the center
+                            </option>
+                        </select>
+                        <br>
+                        <p>Generated Video Plan:</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                            <video id="vid_aloha" width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/aloha.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+
+                        <div class="row">
+                            <p>
+                                Both language and video plans are generated and stitched together through tree search. All four videos are simultaneously generated.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                <!----- End block --->
+
+
+            </div>
+        </div>
+
+        <div class="row justify-content-md-center mt-4">
+            <div class="col-md-10 col-lg-8">
+                <h3 id="vlm">Effect of Using Planning with VLMs and Video Models</h3>
+                <p>We next analyze the effect of combining VLM and video models together through planning to synthesize long-horizon video plans. 
+                Below, we first compare with directly generating a long horizon plan using a single task-conditioned video model. We next compare a generated video plan 
+                using VLM and video model with no planning. Finally, we compare with a generated plan with extensive planning. Extensive planning is required for effective synthesis of long-horizon videos.</p>
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Make a Line</h5>
+                    <div class="card-body">
+                        <div class="row">
+                        <div class="col-md-4 mb-2">
+                        <p>Generated Video Plan</p> 
+                        <p>(Single Video Model):</p>
+                            <video width="100%" preload="metadata" playsinline controls loop muted autoplay>
+                                <source src="videos/unipi.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        
+                        <div class="col-md-4 mb-2">
+                            <p>Generated Video Plan</p> <p> (No Search):</p>
+                            <video width="100%" preload="metadata" playsinline controls loop muted autoplay>
+                                <source src="videos/no_plan.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        
+                        <div class="col-md-4 mb-2">
+                            <p>Generated Video Plan</p> <p> (Extensive Search):</p>
+                            <video width="100%" preload="metadata" playsinline controls loop muted autoplay>
+                                <source src="videos/plan.mp4" type="video/mp4">
+                            </video>
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row justify-content-md-center mt-4">
+            <div class="col-md-10 col-lg-8">
+                <h3 id="real">Real Executions</h3>
+                <p>Synthesized long horizon plans can be directly converted to policy execution using a goal-conditioned policy. We illustrate executions of different long-horizon tasks below. </p>
+                
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Make a Line</h5>
+                    <div class="card-body">
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-6 mb-2">
+                            <p>Execution in Real:</p>
+                            <video width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/line_real_execution.mp4" type="video/mp4">
+                            </video>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <p>Execution in Sim:</p>
+                                <video width="100%" preload="metadata" playsinline controls>
+                                    <source src="videos/line_sim_execution.mp4" type="video/mp4">
+                            </video>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Group Blocks by Color</h5>
+                    <div class="card-body">
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-6 mb-2">
+                            <p>Execution in Real:</p>
+                            <video width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/pair_real_execution.mp4" type="video/mp4">
+                            </video>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <p>Execution in Sim:</p>
+                                <video width="100%" preload="metadata" playsinline controls>
+                                    <source src="videos/group_sim_execution.mp4" type="video/mp4">
+                            </video>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Move Blocks to the Top Right Corner</h5>
+                    <div class="card-body">
+                        <p>Video of Execution:</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                            <video width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/area_real_execution.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Move Blocks to the Bottom Left Corner</h5>
+                    <div class="card-body">
+                        <p>Video of Execution:</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                            <video width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/area_sim_execution.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Put the Fruits into the Top Drawer</h5>
+                    <div class="card-body">
+                        <p>Video of Execution:</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                            <video width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/fractal_execution.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="row justify-content-md-center mt-4">
+            <div class="col-md-10 col-lg-8">
+                <h3 id="generalization">Generalization</h3>
+                <p>VLP decouples action prediction into visual goal generation followed by goal-conditioned policy prediction. This abstraction enables VLP to different visual inputs -- the goal-conditioned policy simply to has to focus on the relevant visual parts of visual goal. </p>
+
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Generalization to New Objects</h5>
+                    <div class="card-body">
+                        <p>VLP is able to execute the long-horizon task "move blocks to the top right corner" on three new objects (rubber donut, cupake and wooden yellow hexagon):</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                            <video width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/object.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Generalization to New Lighting Conditions</h5>
+                    <div class="card-body">
+                        <p>VLP is able to execute the long-horizon task "move blocks to the bottom right corner" on a robot moved to a new office with substantially different lighting conditions (much more sunshine on the right side of the board):</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                            <video width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/light.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p>Both text-to-video models and VLMs in VLP can be trained using a wealth of internet knowledge. This also allows VLP to generalize to new tasks without any explicit training. Below we illustrate successful execution on two tasks which
+                VLP has not been trained on.</p>
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Move Moose Toy Near Green Pear</h5>
+                    <div class="card-body">
+                        <p>VLP is able to execute the unseen task "move moose toy near green peer".</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                            <video width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/moose.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Pick Snicker Energy Bar</h5>
+                    <div class="card-body">
+                        <p>VLP is able to execute the unseen task "pick snicker energy bar".</p>
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-8 mb-2">
+                            <video width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/snicker.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row justify-content-md-center mt-4">
+            <div class="col-md-10 col-lg-8">
+                <h3 id="limitations">Limitations</h3>
+                <p>VLP has several limitations. First, the physics of objects may not be accurately preserved (as illustrated by several of the synthesized video plans above) and objects may suddenly disappear and appear. Furthermore, world knowledge may not be correctly transferred to new tasks. Below, we show a video plan where internet knowledge is inaccurately transferred. </p>
+
+                <div class="card mb-4 mt-4 text-dark bg-light">
+                    <h5 class="card-header">Pick up Octopus Toy</h5>
+                    <div class="card-body">
+                        <div class="row justify-content-md-center mt-4">
+                            <div class="col-md-6 mb-2">
+                            <p>Initial Frame</p>
+                            <img src="img/octopus.png" width="100%"></img>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <p>Generated Video Plan:</p>
+                            <video width="100%" preload="metadata" playsinline controls>
+                                <source src="videos/octopus2.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="row justify-content-md-center mt-4">
+            <div class="col-md-10 col-lg-8">
+                <h3>Related Projects</h3>
+                <p>Check out some of our related projects below! </p>
+
+                <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+                <tr>
+                    <td style="padding:20px;width:25%;vertical-align:middle">
+                      <img src="img/hip_teaser.gif" alt="PontTuset" width="240" style="border-style: none">
+                    </td>
+                    <td width="75%" valign="middle">
+                      <a href="https://hierarchical-planning-foundation-model.github.io/">
+                        <papertitle>Compositional Foundation Models for Hierarchical Planning</papertitle>
+                      </a>
+                      <p> 
+                We present an approach to hierarchical planning by composing a set of foundation models, trained on different aspects of internet video. We leverage iterative energy optimization as a planner that takes outputs from a language,
+                video, and action model and synthesizes actions that are consistent across models.                     </p>
+                      <br>
+                    </td>
+                </tr>
+                <tr>
+                        <td style="padding:20px;width:25%;vertical-align:middle">
+                          <img src="img/unipi.gif" alt="PontTuset" width="240" style="border-style: none">
+                        </td>
+                        <td width="75%" valign="middle">
+                          <a href="https://arxiv.org/pdf/2302.00111.pdf">
+                            <papertitle>Learning Universal Policies via Text-Guided Video Generation</papertitle>
+                          </a>
+                          <p> 
+                            We cast the sequential decision making problem as a text-conditioned video generation problem, where, given a text-encoded specification of a desired goal, a planner synthesizes a set of future frames depicting its planned actions in the future, and the actions will be extracted from the generated video. Our policy-as-video formulation can represent environments with different state and action spaces in a unified space of images, enabling learning and generalization across a wide range of robotic manipulation tasks.
+                          </p>
+                        </td>
+            </tr>
+            <tr>
+                <td style="padding:20px;width:25%;vertical-align:middle">
+                  <img src="img/decisiondiff.gif" alt="PontTuset" width="240" style="border-style: none">
+                </td>
+                <td width="75%" valign="middle">
+                  <a href="https://openreview.net/pdf?id=sP1fo2K9DFG">
+                    <papertitle>Is Conditional Generative Modeling all you need for Decision Making?</papertitle>
+                  </a>
+                  <p> 
+                    We illustrate how conditional generative modeling is a powerful paradigm for decision-making, enabling us utilize a reward conditional model to effectively perform offline RL. We further illustrate how conditional generative modeling enables us to compose multiple different constraints and skills together.
+                  </p>
+                  <br>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding:20px;width:25%;vertical-align:middle">
+                  <img src="img/compose_pretrain_process.gif" alt="PontTuset" width="240" style="border-style: none">
+                </td>
+                <td width="75%" valign="middle">
+                  <a href="https://arxiv.org/abs/2210.11522">
+                    <papertitle>Composing Pretrained Models through Iterative Consensus</papertitle>
+                  </a>
+                  <p> 
+                    We present a method to combine different large pretrained models together by having individual models communicate with each other through iterative consensus. We illustrate how this combination of models can do zero-shot VQA, image generation, reasoning, and image generation.
+                  </p>
+                </td>
+            </tr>
+
+            </tbody></table>
+
+            </div>
+        </div>
+        <br>
+        
+        <div class="row justify-content-md-center">
+            <div class="col-md-10 col-lg-8">
+                <h3>
+                    Citation 
+                </h3>
+                <a href="https://arxiv.org/abs/2310.10625">[arxiv version]</a>
+                <div class="form-group col-md-12">
+                    <textarea id="bibtex" class="form-control" readonly>
+@article{du2023video,
+  title={Video Language Planning},
+  author={Du, Yilun and Yang, Mengjiao and Florence, Pete and Xia, Fei and Wahid, Ayzaan and Ichter, Brian and Sermanet, Pierre and Yu, Tianhe and Abbeel, Pieter and Tenenbaum, Joshua B and others},
+  journal={arXiv preprint arXiv:2310.10625},
+  year={2023}
+}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-md-center mt-4">
+            <div class="col-md-10 col-lg-8">
+                <h3>
+                    Acknowledgements
+                </h3>
+                <p class="text-justify">
+                    Special thanks to Tomas Lozano-Perez for helpful feedback throughout the project and Kamyar Ghasemipour for help in setting up robot experiments on Language Table setting.
+                </p>
+            </div>
+        </div>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>
