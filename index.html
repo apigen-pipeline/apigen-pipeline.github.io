@@ -117,12 +117,6 @@
                 <h4><strong>Data</strong></h4>
                 </a>
             </div>
-            <div class="col-md-2 text-center">
-                <a href="#results">
-                <image src="img/results.png" height="60px">
-                <h4><strong>Results</strong></h4>
-                </a>
-            </div>
         </div>
 
         <div class="row justify-content-md-center">
@@ -139,16 +133,12 @@
                 <p class="text-justify">
                     This section introduces the detailed design of APIGen, an <b>Automated Pipeline for Generating verifiable and diverse function-calling datasets</b>. Our framework is designed with three key factors in mind: data quality, data diversity, and collection scalability. We achieve these through the key modules shown in the figure below: the multi-stage data verification process ensures data quality, the seed QA (query-answer) data sampler, API sampler, and various prompt templates ensure diversity, and our structured modular design using a unified format enables the system to scale to diverse API sources, including but not limited to Python functions and representational state transfer (REST) APIs.
                 </p>
-                <p style="text-align:center;">
-                    <image src="figures/overview.jpg" width="100%">
-                </p>
-
                 <h4 class="mt-4 mb-2">Data Generation Overview</h4>
                 <p class="text-justify">
                     The data generation process using the APIGen framework begins by sampling one or more APIs and example query-answer (QA) pairs from the library, then formatting them into a standardized JSON format (see figure below for examples). A prompt template is selected based on the desired data generation objectives, which steers the LLM in generating relevant query-answer pairs. Each answer in the generated pairs is a function call formatted in JSON.
                 </p>
                 <p style="text-align:center;">
-                    <image src="figures/json_format_example.png" width="100%">
+                    <image src="img/json_format_example.png" width="100%">
                 </p>
                 <p class="text-justify">
                     The adoption of a standardized JSON format for APIs, function calls, and generator outputs provides several advantages. Firstly, it establishes a structural way to verify whether the generator's output contains all necessary fields. Outputs that fail to comply with these format requirements are discarded. Secondly, the JSON structure enables efficient checking of function calls for correct parsing and validity of arguments. Calls that include arguments not present in the API library or hallucinate non-existent functions are excluded, enhancing the overall quality of the dataset. Another key benefit is the scalability it enables. With this uniform format, APIGen can easily incorporate data from diverse sources (Python functions, REST APIs, etc) by developing format converters that adapt them into these basic JSON elements, without modifying other core components, such as the prompting library, making the framework highly adaptable and extensible.
@@ -180,6 +170,94 @@
                 </ul>
                 <p class="text-justify">
                     In APIGen, the number of examples and APIs sampled for each dataset iteration is randomly chosen from a predefined range. This randomization enhances dataset variability by preventing repetitive patterns and ensuring a broad coverage of scenarios.
+                </p>
+
+                <h4 class="mt-4 mb-2">Dataset API Sources</h4>
+                <p class="text-justify">
+                    To ensure a high-quality and diverse dataset, we focused on collecting real-world APIs that could be readily executed and came with thorough documentation. We primarily sourced APIs from ToolBench, a comprehensive tool-use dataset that includes 16,464 REST APIs across 49 coarse-grained categories from RapidAPI Hub. This hub is a leading marketplace featuring a vast array of developer-contributed APIs.
+                </p>
+                <p class="text-justify">
+                    To further enhance the usability and quality of the APIs, we perform the following filtering and cleaning procedures on the ToolBench dataset:
+                </p>
+                <ul>
+                    <li><b>Data Quality Filtering:</b> We remove APIs with incorrectly parsed documentation and those lacking required or optional parameters. APIs requiring no parameters were excluded to maintain the challenge level appropriate for our dataset needs.</li>
+                    <li><b>API Accessibility Testing:</b> We tested API accessibility by making requests to each endpoint using example parameters provided in the dataset and through the Stable Toolbench server. APIs that could not be executed or returned errors, such as timeouts or invalid endpoints, were discarded.</li>
+                    <li><b>Docstring Regeneration:</b> To improve the quality of API documentation, we regenerated docstrings for the APIs that have noisy and unusable descriptions.</li>
+                </ul>
+                <p style="text-align:center;">
+                    <image src="img/dataset_pie_chart.png" width="40%">
+                </p>
+                <p class="text-justify">
+                    After cleaning, we obtain 3,539 executable REST APIs with good documentation. Additionally, we incorporated Python functions as another API type, inspired by the executable evaluation categories of the Berkeley function-calling benchmark. We collected 134 well-documented Python functions covering diverse fields such as mathematics, finance, and data management. Sample API examples are provided in the supplementary material.
+                </p>
+                <p class="text-justify">
+                    The original ToolBench dataset contained semantically overlapping categories such as <tt>Finance</tt> and <tt>Financial</tt>. We consolidated these into 21 distinct categories to ensure clarity and balance across the dataset. Figure \ref{fig:dataset_category} illustrates the distribution of the 3,673 executable APIs across these redefined categories, spanning sectors like technology, social sciences, education, and sports. This diverse collection of APIs provides a strong foundation for synthetic data generation and is a valuable asset for ensuring data quality and reliability.
+                </p>
+
+                <h4 class="mt-4 mb-2">Collection Setup and Dataset Details</h4>
+                <p class="text-justify">
+                    To validate the effectiveness of the APIGen framework, we generated datasets targeting various query styles as outlined in Section \ref{sec:diversity}. We utilized several base LLMs for data generation, including DeepSeek-V2-Chat (236B), DeepSeek-Coder-33B-Inst, Mixtral-8x22B-Inst, and Mixtral-8x7B-Inst. For each model, our target was to generate 40,000 data points by sampling different combinations of APIs, seed data, and prompt templates. To foster diversity in the generated responses, we set the generation temperature to 0.7 across all models. Examples of the prompt templates and APIs used are provided in the supplementary materials for reference.
+                </p>
+                <p class="text-justify">
+                    Table below presents statistics for the data generation process with different models, including the total verified data point count and the number of filtered data points at each verification stage. The filtering process successfully removes many low-quality data points due to formatting issues, execution errors, or failure to pass the semantic check. The first two stages, format checker and execution checker, typically filter out the majority of low-quality data. These data points often have infeasible argument ranges, incorrect types, missing required parameters, or more severe issues such as hallucination of function calls or parameters. Our systematic verification process provides a rigorous way to reduce the occurrence of these situations.
+                </p>
+                <p style="text-align:center;">
+                    <table class="table">
+                        <caption>Filtering statistics for the generated datasets using different base LLMs.</caption>
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Verified Data</th>
+                                <th>Fail Format</th>
+                                <th>Fail Execution</th>
+                                <th>Fail Semantic</th>
+                                <th>Pass Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>DeepSeek-Coder-33B-Inst</td>
+                                <td>13,769</td>
+                                <td>4,311</td>
+                                <td>15,496</td>
+                                <td>6,424</td>
+                                <td>34.42%</td>
+                            </tr>
+                            <tr>
+                                <td>Mixtral-8x7B-Inst</td>
+                                <td>15,385</td>
+                                <td>3,311</td>
+                                <td>12,341</td>
+                                <td>7,963</td>
+                                <td>38.46%</td>
+                            </tr>
+                            <tr>
+                                <td>Mixtral-8x22B-Inst</td>
+                                <td>26,384</td>
+                                <td>1,680</td>
+                                <td>5,073</td>
+                                <td>6,863</td>
+                                <td>65.96%</td>
+                            </tr>
+                            <tr>
+                                <td>DeepSeek-V2-Chat (236B)</td>
+                                <td>33,659</td>
+                                <td>817</td>
+                                <td>3,359</td>
+                                <td>2,165</td>
+                                <td>84.15%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </p>
+                <p class="text-justify">
+                    The semantic checker also plays a crucial role in filtering generated data that does not align with the query's objectives. For instance, if a user's query contains multiple requests, but the returned results only address one, or if the generated function-call data and execution results do not match the user's query, the data point will be filtered out. Including these data points in the training set for model training could potentially harm the performance, as demonstrated in the experiments.
+                </p>
+                <p class="text-justify">
+                    We observe that stronger models like DeepSeek-V2-Chat and Mixtral-8x22B-Inst have better format-following capabilities and higher pass rates, while the two relatively smaller models have a much higher likelihood of producing data that cannot be executed. This suggests that when using weaker models to generate data, a strict verification process is recommended to filter out low-quality data.
+                </p>
+                <p class="text-justify">
+                    We are releasing approximately 60,000 high-quality function-calling datasets generated from the two strongest models: Mixtral-8x22B-Inst and DeepSeek-V2-Chat (236B). These datasets include all the query styles mentioned in Sec. \ref{sec:diversity} and cover a wide range of practical situations, with 3,673 diverse APIs across 21 categories. Each data point has been verified using real-world APIs to ensure its validity and usefulness. By making this dataset publicly available, we aim to benefit the research community and facilitate future work in this area.
                 </p>
             </div>
         </div>
