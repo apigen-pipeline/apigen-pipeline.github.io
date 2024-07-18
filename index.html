@@ -102,23 +102,24 @@
         <div class="row justify-content-md-center">
             <div class="col-md-2 text-center">
                 <a href="https://arxiv.org/abs/2406.18518">
-                <image src="img/paper_small.png" height="60px">
-                <h4><strong>Paper</strong></h4>
+                    <img src="img/paper_small.png" height="60px" alt="Paper">
+                    <h4><strong>Paper</strong></h4>
                 </a>
             </div>
-<!--             <div class="col-md-2 text-center">
-                <a href="https://drive.google.com/file/d/1SRbdgN_yfeJEQTPDSWci835OsWNE1L0P/view?usp=sharing">
-                <image src="img/github.png" height="60px">
-                <h4><strong>Code</strong></h4>
-                </a>
-            </div> -->
             <div class="col-md-2 text-center">
                 <a href="https://huggingface.co/datasets/Salesforce/xlam-function-calling-60k">
-                <image src="img/data.png" height="60px">
-                <h4><strong>Data</strong></h4>
+                    <img src="img/data.png" height="60px" alt="Data">
+                    <h4><strong>Data</strong></h4>
+                </a>
+            </div>
+            <div class="col-md-2 text-center">
+                <a href="https://huggingface.co/collections/Salesforce/xlam-models-65f00e2a0a63bbcd1c2dade4">
+                    <img src="https://huggingface.co/datasets/huggingface/brand-assets/resolve/main/hf-logo.svg" height="60px" alt="HuggingFace Models">
+                    <h4><strong>Models</strong></h4>
                 </a>
             </div>
         </div>
+
 
         <div class="row justify-content-md-center">
             <div class="col-md-10 col-lg-8">
@@ -260,6 +261,20 @@
                 <p class="text-justify">
                     We are releasing approximately 60,000 high-quality function-calling datasets generated from the two strongest models: Mixtral-8x22B-Inst and DeepSeek-V2-Chat (236B). These datasets include all the query styles mentioned and cover a wide range of practical situations, with 3,673 diverse APIs across 21 categories. Each data point has been verified using real-world APIs to ensure its validity and usefulness. By making this dataset publicly available, we aim to benefit the research community and facilitate future work in this area.
                 </p>
+
+                <p class="text-justify">
+                    We mainly test our function-calling models on the <a href="https://gorilla.cs.berkeley.edu/leaderboard.html">Berkeley Function-Calling Leaderboard (BFCL)</a>, which offers a comprehensive evaluation framework for assessing LLMs' function-calling capabilities across various programming languages and application domains like Java, JavaScript, and Python.
+                </p>
+                
+                <div align="center">
+                    <img src="https://github.com/apigen-pipeline/apigen-pipeline.github.io/blob/main/img/table-result-0718.png?raw=true" width="620" alt="Performance comparison on Berkeley Function-Calling Leaderboard">
+                    <p>Performance comparison on the BFCL benchmark as of date 07/18/2024. Evaluated with <code>temperature=0.001</code> and <code>top_p=1</code></p>
+                </div>
+                
+                <p class="text-justify">
+                    Our <code>xLAM-7b-fc-r</code> secures the 3rd place with an overall accuracy of 88.24% on the leaderboard, outperforming many strong models. Notably, our <code>xLAM-1b-fc-r</code> model is the only tiny model with less than 2B parameters on the leaderboard, but still achieves a competitive overall accuracy of 78.94%, outperforming GPT3-Turbo and many larger models. Both models exhibit balanced performance across various categories, showing their strong function-calling capabilities despite their small sizes.
+                </p>
+
             </div>
         </div>
     </div>
